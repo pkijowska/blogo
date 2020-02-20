@@ -1,6 +1,7 @@
 # blogo
 ```
-My personal blog about my recent tech discoveries. Just things which I found useful on my journey  to become a developer.
+My personal blog about my recent tech discoveries. \
+Just things which I found useful on my journey  to become a developer.
 ```
 
 Technology used:
