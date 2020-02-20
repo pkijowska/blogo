@@ -12,4 +12,4 @@ Technology used:
 :bulb: MongoDB\
 :bulb: Mongoose\
 
-Any :bug:? Nothing that I am aware of!
+No :bug: that I am aware of!
