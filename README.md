@@ -1,4 +1,7 @@
 # blogo
+```
+My personal blog about my recent tech discoveries. Just things which I found useful on my journey  to become a developer.
+```
 
 Technology used:
 
@@ -8,3 +11,5 @@ Technology used:
 :bulb: Express\
 :bulb: MongoDB\
 :bulb: Mongoose\
+
+Any :bug:? Nothing that I am aware of!
