@@ -42,9 +42,11 @@ app.post("/compose", function(req, res){
 app.get("/posts/:topic", function(req, res){
   const topic = _.lowerCase(req.params.topic);
   const result = posts.forEach(function(post){
-      const title  = _.lowerCase(post.title);
+  const title  = _.lowerCase(post.title);
   if (topic === title){
-    console.log("match");
+    console.log(post);
+      res.render("post", {title: title, content: post.body});
+
   }
   });
   console.log(result);
