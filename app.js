@@ -2,6 +2,7 @@
 
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 const ejs = require("ejs");
 const _ = require("lodash");
 
@@ -16,9 +17,46 @@ app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
+mongoose.connect("mongodb://localhost:27017/blogpostDB", {useNewUrlParser: true});
+
+const postsSchema = {
+  title: String,
+  content: String
+}
+
+const Post = mongoose.model(
+  "Post",
+  postsSchema
+)
+
+const post1 = new Post({
+  title: "Want Free Coding Lessons? Twitch Makes It Happen in Real Time",
+  content: "While the platform might be known for videogame livestreams, more people are flocking there to share their work—or learn to be better programmers. https://www.wired.com/story/want-free-coding-lessons-twitch-real-time/"
+});
+
+const post2 = new Post({
+  title: "How To Build A Simple Cryptocurrency Blockchain In Node.js",
+  content: "https://www.smashingmagazine.com/2020/02/cryptocurrency-blockchain-node-js/"
+});
+
+const defaultItems = [post1, post2];
+
+
 
 app.get("/", function(req, res){
-  res.render("home", {content: homeStartingContent, posts: posts});
+  Post.find({}, function(err, foundItems) {
+    if (foundItems.length === 0) {
+      Post.insertMany(defaultItems, function(err){
+      if (err) {
+      console.log(err);
+      } else {
+      console.log("Successfully saved the content");
+      }
+    });
+  } else {
+    res.render("home", {content: homeStartingContent, posts: foundItems});
+   }
+  });
 });
 
 app.get("/about", function(req, res){
@@ -34,22 +72,33 @@ app.get("/compose", function(req, res){
 });
 
 app.post("/compose", function(req, res){
-  const post = {title: req.body.title, body: req.body.postBody};
-  posts.push(post);
+  const post = new Post ({
+  title: req.body.title,
+  content: req.body.postBody
+});
+  // post.save();
   res.redirect("/");
+
+  Post.insertMany(post, function(err){
+    if (err) {
+      console.log(err);
+    } else {
+    console.log("Successfully saved default items");
+    }
+  });
 });
 
-app.get("/posts/:topic", function(req, res){
-  const topic = _.lowerCase(req.params.topic);
-  const result = posts.forEach(function(post){
-  const title  = _.lowerCase(post.title);
-  if (topic === title){
-    console.log(post);
-      res.render("post", {title: title, content: post.body});
 
-  }
+app.get("/posts/:postId", function(req, res){
+
+const requestedPostId = req.params.postId;
+
+  Post.findOne({_id: requestedPostId}, function(err, post){
+    res.render("post", {
+      title: post.title,
+      content: post.content
+    });
   });
-  console.log(result);
 
 });
 
